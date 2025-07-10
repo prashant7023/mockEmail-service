@@ -1,0 +1,40 @@
+# Node modules (will be installed in container)
+node_modules/
+
+# Development files
+*.md
+*.log
+.git/
+.gitignore
+
+# Test files
+test-*.js
+coverage/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Environment files (sensitive data)
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Documentation
+README*.md
+SOLUTION_REPORT.md
+WEB_SERVER_FIXED.md
+DEMOS_FIXED.md

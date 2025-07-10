@@ -41,28 +41,67 @@ EmailService
 
 ## Quick Start
 
-### Installation
+### 🐳 Docker (Recommended)
+
+The fastest way to get started is using Docker:
+
+```bash
+# Pull and run from Docker Hub
+docker pull prashant7023/resilient-email-service:latest
+docker run -p 3001:3001 prashant7023/resilient-email-service:latest
+```
+
+Access the web interface at: http://localhost:3001
+
+### 📦 From Source
 
 ```bash
 npm install
-```
-
-### Build
-
-```bash
 npm run build
-```
-
-### Run Tests
-
-```bash
 npm test
+npm run dev
 ```
 
-### Run Example
+### Docker Compose
+
+For a complete setup with optional services:
 
 ```bash
-npm run dev
+# Clone the repository
+git clone <repository-url>
+cd resilient-email-service
+
+# Start with Docker Compose
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down
+```
+
+## 🌐 Docker Hub
+
+The application is available as a Docker image:
+- **Repository**: `prashant7023/resilient-email-service`
+- **Tags**: `latest`, `v1.0.0`
+- **Size**: ~188MB (Alpine-based)
+- **URL**: https://hub.docker.com/r/prashant7023/resilient-email-service
+
+### Environment Variables
+
+Configure the container using environment variables:
+
+```bash
+docker run -p 3001:3001 \
+  -e NODE_ENV=production \
+  -e PORT=3001 \
+  -e MAX_RETRIES=5 \
+  -e RATE_LIMIT_PER_MINUTE=100 \
+  -e CIRCUIT_BREAKER_THRESHOLD=3 \
+  -e CIRCUIT_BREAKER_TIMEOUT=30000 \
+  prashant7023/resilient-email-service:latest
 ```
 
 ## Usage
