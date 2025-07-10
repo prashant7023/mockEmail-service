@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resilient Email Service</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981',
+                        danger: '#EF4444',
+                        warning: '#F59E0B'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">🚀 Resilient Email Service</h1>
+            <p class="text-gray-600 text-lg">A demonstration of a resilient email service with retry logic, fallback providers, rate limiting, and circuit breaker patterns.</p>
+        </div>
+
+        <!-- Send Email Section -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center">
+                📧 Send Email
+            </h2>
+            <form id="emailForm" class="space-y-4">
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="to" class="block text-sm font-medium text-gray-700 mb-2">To:</label>
+                        <input type="email" id="to" name="to" value="user@example.com" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                    </div>
+                    <div>
+                        <label for="from" class="block text-sm font-medium text-gray-700 mb-2">From:</label>
+                        <input type="email" id="from" name="from" value="sender@example.com" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                    </div>
+                </div>
+                <div>
+                    <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Subject:</label>
+                    <input type="text" id="subject" name="subject" value="Test Email" required 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                </div>
+                <div>
+                    <label for="body" class="block text-sm font-medium text-gray-700 mb-2">Message:</label>
+                    <textarea id="body" name="body" rows="4" required 
+                              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                              placeholder="This is a test email from the resilient email service.">This is a test email from the resilient email service.</textarea>
+                </div>
+                <button type="submit" 
+                        class="w-full md:w-auto bg-primary hover:bg-blue-600 text-white font-medium py-2 px-6 rounded-md transition duration-200 ease-in-out transform hover:scale-105">
+                    Send Email
+                </button>
+            </form>
+            <div id="result" class="mt-4"></div>
+        </div>
+
+        <!-- Service Status Section -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center">
+                📊 Service Status
+            </h2>
+            <button onclick="loadStatus()" 
+                    class="bg-primary hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition duration-200 ease-in-out mb-4">
+                Refresh Status
+            </button>
+            <div id="status" class="bg-gray-50 rounded-md p-4 overflow-auto"></div>
+        </div>
+
+        <!-- Actions Section -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center">
+                🔄 Actions
+            </h2>
+            <div class="flex flex-wrap gap-4">
+                <button onclick="resetService()" 
+                        class="bg-primary hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition duration-200 ease-in-out">
+                    Reset Rate Limit
+                </button>
+                <button onclick="resetCircuitBreakers()" 
+                        class="bg-primary hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition duration-200 ease-in-out">
+                    Reset Circuit Breakers
+                </button>
+                <button onclick="getHealth()" 
+                        class="bg-primary hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition duration-200 ease-in-out">
+                    Check Provider Health
+                </button>
+            </div>
+        </div>
+
+        <!-- Demo Section -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center">
+                🧪 Demo Features
+            </h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                <button onclick="runDemo('basic')" 
+                        class="bg-primary hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition duration-200 ease-in-out">
+                    📧 Basic Email Demo
+                </button>
+                <button onclick="runDemo('retry')" 
+                        class="bg-primary hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition duration-200 ease-in-out">
+                    🔄 Retry Logic Demo
+                </button>
+                <button onclick="runDemo('rate-limit')" 
+                        class="bg-primary hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition duration-200 ease-in-out">
+                    ⏱️ Rate Limiting Demo
+                </button>
+                <button onclick="runDemo('queue')" 
+                        class="bg-primary hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition duration-200 ease-in-out">
+                    📬 Queue Processing Demo
+                </button>
+                <button onclick="runDemo('circuit-breaker')" 
+                        class="bg-primary hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition duration-200 ease-in-out">
+                    ⚡ Circuit Breaker Demo
+                </button>
+                <button onclick="runDemo('full')" 
+                        class="bg-primary hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition duration-200 ease-in-out">
+                    🚀 Run Full Demo
+                </button>
+            </div>
+            <div id="demoResult" class="hidden"></div>
+        </div>
+
+        <!-- Legacy Demo Section -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center">
+                🔧 Manual Testing
+            </h2>
+            <div class="grid md:grid-cols-2 gap-4">
+                <button onclick="sendTestEmail('FORCE_FAILURE_A')" 
+                        class="bg-primary hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition duration-200 ease-in-out">
+                    Test Retry Logic (Force Provider A Failure)
+                </button>
+                <button onclick="sendTestEmail('FORCE_FAILURE_B')" 
+                        class="bg-primary hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition duration-200 ease-in-out">
+                    Test Fallback (Force Provider B Failure)
+                </button>
+                <button onclick="sendMultipleEmails()" 
+                        class="bg-primary hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition duration-200 ease-in-out">
+                    Test Rate Limiting (Send Multiple)
+                </button>
+                <button onclick="runFullDemo()" 
+                        class="bg-primary hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition duration-200 ease-in-out">
+                    Run Full Demo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>

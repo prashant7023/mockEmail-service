@@ -1,0 +1,19 @@
+{
+  "name": "resilient-email-service-js",
+  "version": "1.0.0",
+  "description": "A resilient email sending service with retry logic, fallback, and rate limiting - Pure JavaScript version",
+  "main": "src-js/index.js",
+  "scripts": {
+    "start": "node src-js/index.js",
+    "test": "jest --config jest-js.config.js",
+    "test:watch": "jest --watch --config jest-js.config.js",
+    "demo": "node server/server.js"
+  },
+  "keywords": ["email", "service", "resilient", "javascript", "retry", "fallback"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.5.0"
+  },
+  "dependencies": {}
+}
